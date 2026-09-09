@@ -45,30 +45,30 @@ case ($facts['os']['family']) {
   }
 }
 
-if fact('network_mgmt1') {
+if $facts['network_mgmt1'] {
   $netpart_mgmt1 = regsubst($network_mgmt1,'^(\d+)\.(\d+)\.(\d+)\.(\d+)$','\1.\2.\3')
   info("netpart_mgmt1: ${netpart_mgmt1}")
 }
-if fact('network_transport1') {
+if $facts['network_transport1'] {
   $netpart_transport1 = regsubst($network_transport1,'^(\d+)\.(\d+)\.(\d+)\.(\d+)$','\1.\2.\3')
   info("netpart_transport1: ${netpart_transport1}")
 }
-if fact('network_trp1') {
+if $facts['network_trp1'] {
   $netpart_trp1 = regsubst($network_trp1,'^(\d+)\.(\d+)\.(\d+)\.(\d+)$','\1.\2.\3')
   info("netpart_trp1: ${netpart_trp1}")
 }
 
 # Set runmode to default if it is not provided
-unless fact('runmode') {
-  if fact('is_installer') { # from kickstart in foreman
+unless $facts['runmode'] {
+  if $facts['is_installer'] { # from kickstart in foreman
     $runmode = 'kickstart'
   } else {
     $runmode='default'
   }
 }
 
-# BMC variables (only run on physical machines and not on kickstart run)
-unless $::is_virtual == true or $runmode == 'kickstart'  {
+# BMC variables (only run on physical machines with a mgmt interface, and not on kickstart run)
+unless $::is_virtual == true or $runmode == 'kickstart' or empty($facts['ipaddress_mgmt1']) {
   $bmc_network  = Integer(regsubst($::ipaddress_mgmt1, '^(\d+)\.(\d+)\.(\d+)\.(\d+)$','\2',)) + 1
   $bmc_address  = regsubst($::ipaddress_mgmt1, '^(\d+)\.(\d+)\.(\d+)\.(\d+)$',"\\1.${bmc_network}.\\3.\\4",)
 }

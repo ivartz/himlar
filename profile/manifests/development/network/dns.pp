@@ -16,7 +16,7 @@ class profile::development::network::dns(
     # Fetch dns records
     $dns = lookup('profile::network::services::dns_records', Hash, $real_merge_strategy, {})
     # Create temp variable
-    $list = join_keys_to_values($dns['A'], '|')
+    $list = $dns['A'].map |$key, $val| { "${key}|${val}" }
     # Update /etc/hosts
     profile::development::network::dns_record { $list:
       use_dnsmasq => $use_dnsmasq

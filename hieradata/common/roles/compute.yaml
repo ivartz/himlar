@@ -22,7 +22,7 @@ include:
     - profile::network::yum_proxy
     - profile::base::httpproxy
 
-openstack_version: 'yoga'
+openstack_version: 'antelope'
 
 # Set SELinux mode to enforcing
 profile::base::selinux::manage_selinux: true

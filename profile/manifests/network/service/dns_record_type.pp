@@ -6,7 +6,7 @@ define profile::network::service::dns_record_type(
 
   $type_options          = $options[$name]
   $type_records          = $records[$name]
-  $type_record_resources = join_keys_to_values($records[$name], '_')
+  $type_record_resources = $records[$name].map |$key, $val| { "${key}_${val}" }
 
   profile::network::service::dns_record { $type_record_resources:
     type    => $name,

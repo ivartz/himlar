@@ -34,6 +34,8 @@ puppetrun()
   ENV_PATH=environments/$PUPPET_ENV
 
   echo "puppet run for environment ${PUPPET_ENV}"
+  # Load custom facts from module lib dirs (facter does not scan modulepaths)
+  export FACTERLIB="/opt/himlar/modules/named_interfaces/lib/facter:${CODE_PATH}/$ENV_PATH/modules/named_interfaces/lib/facter"
   /opt/puppetlabs/puppet/bin/puppet apply --verbose --show_diff \
     --certname $certname \
     --write-catalog-summary \
@@ -58,6 +60,13 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# Seed named_interfaces fact for vagrant (structured external facts are broken in facter 4.10,
+# the custom fact in modules/named_interfaces reads this file directly via Ruby YAML)
+if [[ $HIMLAR_VAGRANT == "true" ]] && [[ ! -f /etc/facter/facts.d/named_interfaces.yaml ]]; then
+  mkdir -p /etc/facter/facts.d
+  printf 'vagrant:\n  - eth0\nmgmt:\n  - eth1\ntrp:\n  - eth2\nlive:\n  - eth2\npublic:\n  - eth3\n' > /etc/facter/facts.d/named_interfaces.yaml
+fi
 
 # Set certname
 set_certname

@@ -17,7 +17,7 @@ profile::openstack::resource::host_aggregate:
 profile::base::common::packages:
   'python3-redis': {} # OSProfiler dependency
 
-profile::openstack::novactrl::manage_osprofiler: true
+profile::openstack::novactrl::manage_osprofiler: false
 
 # FIXME: temp fix to be able to create the aggregates with puppet
 keystone::bootstrap::username:              'admin'

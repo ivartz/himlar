@@ -24,6 +24,6 @@ cinder::config::cinder_config:
 profile::base::common::packages:
   'python3-redis': {} # OSProfiler dependency
 
-profile::openstack::volume::manage_osprofiler: true
+profile::openstack::volume::manage_osprofiler: false
 
 profile::storage::cephclient::enable: false

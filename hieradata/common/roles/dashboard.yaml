@@ -7,7 +7,7 @@ include:
     - profile::openstack::cache
     - profile::base::systemd
 
-openstack_version: 'zed'
+openstack_version: 'antelope'
 
 named_interfaces::config:
   mgmt:

@@ -3,15 +3,15 @@ include:
   default:
     - profile::application::openssl
 
+# Disable haproxy and rsyslog in vagrant (modules not in Puppetfile)
+profile::highavailability::loadbalancing::haproxy::manage_haproxy: false
+profile::highavailability::loadbalancing::haproxy::manage_firewall: false
+profile::logging::rsyslog::client::manage_rsyslog: false
+
 profile::application::openssl::manage_ca_cert: true
 
 object__backend__names:    ['%{::location}-rgw-01']
 object__backend__ips:      ["%{hiera('netcfg_trp_netpart')}.84"]
-
-# Uncomment this to enable local logfile /var/log/haproxy.log
-# (will need clean install or full reinstall of rsyslog with all config files)
-#profile::highavailability::loadbalancing::haproxy::enable_remote_logging: true
-#profile::logging::rsyslog::client::manage_rsyslog:                        false
 
 frontend_star_ssl_pem:    "star.%{hiera('domain_frontend')}.pem"
 
@@ -32,74 +32,3 @@ profile::application::openssl::certs:
   "console.%{hiera('domain_public')}":
     cn:     "console.%{hiera('domain_public')}"
     concat: true
-#
-# Example of override image backend for more nodes
-#
-#profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
-#  image:
-#    listening_service:  'bk_image'
-#    ports:              9292
-#    server_names:
-#      - '%{::location}-image-01'
-#      - '%{::location}-image-02'
-#    ipaddresses:
-#      - "%{hiera('netcfg_trp_netpart')}.36"
-#      - "%{hiera('netcfg_trp_netpart')}.37"
-#    options:            'check'
-
-#
-# Example of override network backend for more nodes
-#
-# profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
-#   network:
-#     listening_service:  'bk_network'
-#     ports:              9696
-#     server_names:
-#       - '%{::location}-network-01'
-#       - '%{::location}-network-02'
-#     ipaddresses:
-#       - "%{hiera('netcfg_trp_netpart')}.71"
-#       - "%{hiera('netcfg_trp_netpart')}.72"
-#     options:            'check'
-
-
-# Example of override compute backend for more nodes
-#stats socket
-# profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
-#   compute:
-#     listening_service:  'bk_compute'
-#     ports:              8774
-#     server_names:
-#       - '%{::location}-novactrl-01'
-#       - '%{::location}-novactrl-02'
-#     ipaddresses:
-#       - "%{hiera('netcfg_trp_netpart')}.66"
-#       - "%{hiera('netcfg_trp_netpart')}.67"
-#     options:            'check'
-
-## Example of override placement backend for more nodes
-#
-# profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
-#   placement:
-#     listening_service:  'bk_placement'
-#     ports:              8778
-#     server_names:
-#       - '%{::location}-novactrl-01'
-#       - '%{::location}-novactrl-02'
-#     ipaddresses:
-#       - "%{hiera('netcfg_trp_netpart')}.66"
-#       - "%{hiera('netcfg_trp_netpart')}.67"
-#     options:            'check'
-
-## Example of override dns backend for more nodes
-#
-# profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
-#   dns:
-#     server_names:
-#       - '%{::location}-dns-01'
-#       - '%{::location}-dns-02'
-#       - '%{::location}-dns-03'
-#     ipaddresses:
-#       - "%{hiera('netcfg_trp_netpart')}.34"
-#       - "%{hiera('netcfg_trp_netpart')}.35"
-#       - "%{hiera('netcfg_trp_netpart')}.39"

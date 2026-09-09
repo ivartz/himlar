@@ -367,8 +367,8 @@ class profile::base::physical (
       }
       case $facts['manufacturer'] {
         'Dell Inc.': {
-          unless fact('dmi.product.name') =~ '(FC|[RTM])[1-9][1-3]\d.*' {
-            if fact('dmi.product.name') =~ '^PowerEdge ([R])[4-9][7-9]\d.*' {
+          unless $facts['dmi.product.name'] =~ '(FC|[RTM])[1-9][1-3]\d.*' {
+            if $facts['dmi.product.name'] =~ '^PowerEdge ([R])[4-9][7-9]\d.*' {
               $bmc_idrac10_attributes.each |$attribute, $value| {
                 if ($attribute == 'IPv4.1.StaticAddress') and (!$value) {
                   $attr_value = $::bmc_address
@@ -399,7 +399,7 @@ class profile::base::physical (
           }
         }
         'Supermicro': {
-          if fact('dmi.product.name') =~ /(?i:AS *- *(2115GT-HNTR|5126GS-TNRT2))/ {
+          if $facts['dmi.product.name'] =~ /(?i:AS *- *(2115GT-HNTR|5126GS-TNRT2))/ {
             # New Supermicro servers (AS-2115GT-HNTR 5126GS-TNRT2)
             $address     = $::bmc_address
             $subnet_mask = $bmc_generic_attributes['SubnetMask']

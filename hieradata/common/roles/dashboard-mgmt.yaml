@@ -1,5 +1,5 @@
 ---
-openstack_version: 'zed'
+openstack_version: 'antelope'
 
 horizon::allowed_hosts:                 '*'
 horizon::servername:                    "dashboard.%{hiera('domain_mgmt')}"

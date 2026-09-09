@@ -2,11 +2,47 @@
 include:
   bootstrap:
     - profile::development::network::dns
-    - profile::application::openssl
+    - profile::database::mariadb
   default:
     - profile::development::network::dns
-    - profile::application::openssl::catrust
-    - profile::application::openssl
+    - profile::database::mariadb
+
+profile::database::galera::ensure: absent
+profile::database::galera::manage_firewall: false
+profile::database::mariadb::manage_repo: false
+profile::database::mariadb::manage_firewall: false
+
+# Vagrant: use EL9 default mariadb packages, not upstream MariaDB
+mysql::client::package_name: 'mariadb'
+mysql::server::package_name: 'mariadb-server'
+
+# Vagrant: disable modules not in Puppetfile
+profile::base::common::manage_accounts: false
+profile::base::common::manage_ssh: false
+profile::base::common::manage_ntp: false
+profile::base::common::manage_chrony: false
+profile::base::common::manage_sudo: false
+profile::base::common::manage_timezones: false
+profile::base::common::manage_keyboard: false
+profile::base::common::manage_network: false
+profile::base::common::manage_packages: true
+profile::base::common::manage_yumrepo: false
+profile::base::common::manage_puppet: false
+profile::base::common::include_virtual: false
+profile::base::common::include_physical: false
+profile::base::firewall::manage_firewall: false
+profile::base::common::disable_firewalld: true
+# EL9 nodes need the RDO antelope repo for openstack-* packages (repos are baked into prod images,
+# vagrant boxes don't have them). epel gpgkey comes from installed epel-release.
+profile::base::common::manage_yumrepo: true
+profile::base::yumrepo::repo_hash:
+  rdo-release:
+    ensure: present
+
+profile::messaging::rabbitmq::manage_firewall: false
+profile::base::hostname::manage_hostname: false
+profile::base::selinux::manage_selinux: false
+profile::logging::logrotate::manage_logrotate: false
 
 # Location setting
 location_environment: vagrant
@@ -401,3 +437,18 @@ profile::logging::osprofiler::osprofiler_config:
     value: 'tracethis'
   profiler/connection_string:
     value: "redis://%{hiera('mgmt__address__proxy')}:6379"
+# SELinux: keep enforcing but allow services to bind their ports (openstack-selinux policy package
+# is not installed in vagrant). Production uses openstack-selinux instead.
+selinux::mode: 'permissive'
+
+# vagrant: api node (haproxy .86) is disabled; point trp service endpoints directly at the service nodes
+profile::network::services::dns_records:
+  A:
+    "identity.%{hiera('domain_trp')}":   "%{hiera('netcfg_trp_net_c0')}.81"
+    "image.%{hiera('domain_trp')}":      "%{hiera('netcfg_trp_net_c0')}.36"
+    "volume.%{hiera('domain_trp')}":     "%{hiera('netcfg_trp_net_c0')}.46"
+    "compute.%{hiera('domain_trp')}":    "%{hiera('netcfg_trp_net_c0')}.66"
+    "placement.%{hiera('domain_trp')}":  "%{hiera('netcfg_trp_net_c0')}.66"
+    "network.%{hiera('domain_trp')}":    "%{hiera('netcfg_trp_net_c0')}.71"
+    "object.%{hiera('domain_trp')}":     "%{hiera('netcfg_trp_net_c0')}.71"
+    "metric.%{hiera('domain_trp')}":     "%{hiera('netcfg_trp_net_c0')}.90"

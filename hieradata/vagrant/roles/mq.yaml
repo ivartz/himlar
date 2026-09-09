@@ -4,3 +4,14 @@
 rabbitmq::cluster_nodes:
   - 'dev-mq-01'
   - 'dev-mq-02'
+
+# mq needs the cloudsmith rabbitmq repos (package not in AlmaLinux/EPEL).
+# yumrepo management is disabled globally in vagrant/common.yaml, re-enable it here.
+profile::base::common::manage_yumrepo: true
+
+# Erlang resolves the node hostname to an IPv6 link-local address (eth0 in libvirt),
+# which breaks epmd prelaunch. Force IPv4 for erlang distribution in vagrant.
+rabbitmq::environment_variables:
+  LC_ALL: 'en_US.UTF-8'
+  RABBITMQ_CTL_ERL_ARGS: '"-proto_dist inet_tcp"'
+  RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: '"-proto_dist inet_tcp"'

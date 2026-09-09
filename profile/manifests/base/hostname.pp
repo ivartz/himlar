@@ -8,7 +8,7 @@ class profile::base::hostname(
 
   $domain_mgmt = lookup('domain_mgmt', String, 'first', $facts['networking']['domain'])
   $hostname = "${::verified_host}.${domain_mgmt}"
-  if fact('os.distro.codename') == 'wheezy' {
+  if $facts['os.distro.codename'] == 'wheezy' {
     file { '/etc/hostname':
       ensure  => 'file',
       mode    => '0644',

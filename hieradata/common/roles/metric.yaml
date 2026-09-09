@@ -8,7 +8,7 @@ include:
     - profile::logging::logrotate
     - profile::storage::cephclient
 
-openstack_version: 'zed'
+openstack_version: 'antelope'
 
 memcached::max_memory: '20%'
 

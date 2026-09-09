@@ -20,7 +20,7 @@ class profile::network::services(
     }
   }
 
-  unless fact('disable_nsupdate') {
+  unless $facts['disable_nsupdate'] {
     if $manage_dns_records {
       $dns_options = lookup('profile::network::services::dns_options', Hash, $dns_merge_strategy, {})
       $dns_records = lookup('profile::network::services::dns_records', Hash, $dns_merge_strategy, {})

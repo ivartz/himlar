@@ -75,7 +75,7 @@ profile::rhsm::virtwho::manage:      false
 profile::base::common::packages:
   'python3-redis': {} # OSProfiler dependency
 
-profile::openstack::compute::manage_osprofiler: true
+profile::openstack::compute::manage_osprofiler: false
 
 profile::storage::cephclient::enable: false
 

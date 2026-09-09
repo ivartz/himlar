@@ -36,7 +36,7 @@ class profile::dns::ns (
   # Find my public IP, if use_public_ip = true. We'll try IPv6 first,
   # fallback to IPv4
   if $use_public_ip {
-    if fact('ipaddress6_public1') {
+    if $facts['ipaddress6_public1'] {
       $my_public_addr = $::ipaddress6_public1
     }
     else {

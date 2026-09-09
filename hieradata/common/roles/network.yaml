@@ -11,7 +11,7 @@ include:
     - profile::monitoring::telegraf
 
 
-openstack_version: 'zed'
+openstack_version: 'antelope'
 
 profile::network::interface::create_custom_routes: true
 profile::base::network::nm_auto_routes:

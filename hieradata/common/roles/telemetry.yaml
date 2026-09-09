@@ -5,7 +5,7 @@ include:
     - profile::openstack::cache
     - profile::openstack::telemetry
 
-openstack_version: 'zed'
+openstack_version: 'antelope'
 
 # Memcache
 memcached::max_memory: '20%'

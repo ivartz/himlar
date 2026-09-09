@@ -297,6 +297,7 @@ class profile::network::interface(
               ensure  => file,
               content => template("${module_name}/network/auto-if.erb"),
               path    => "/etc/sysconfig/network-scripts/ifcfg-${ifname}",
+              notify  => Exec['networkmanager-reload'],
             }
           } elsif Integer($facts['os']['release']['major']) >= 9 {
             if ($ifname[0,2] == 'lo') {
@@ -433,4 +434,14 @@ class profile::network::interface(
       }
     }
   }
+
+  # NetworkManager does not pick up ifcfg files automatically on EL8
+  if $manage_interface and $facts['os']['release']['major'] == '8' {
+    exec { 'networkmanager-reload':
+      command     => '/usr/bin/nmcli con reload',
+      refreshonly => true,
+      path        => ['/usr/bin', '/bin'],
+    }
+  }
 }
+

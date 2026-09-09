@@ -41,4 +41,4 @@ profile::openstack::resource::image_sharing::manage: false
 profile::base::common::packages:
   'python3-redis': {} # OSProfiler dependency
 
-profile::openstack::identity::manage_osprofiler: true
+profile::openstack::identity::manage_osprofiler: false

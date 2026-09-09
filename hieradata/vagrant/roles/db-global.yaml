@@ -1,6 +1,10 @@
 ---
 mysql::server::restart:         true
 
+# Vagrant: use EL9 mariadb-backup, not upstream MariaDB-backup
+profile::database::mariadb::packages:
+  - mariadb-backup
+
 # This will not be merged so we need to add grants from common as well
 profile::database::mariadb::grants:
   "keystone@%{hiera('netcfg_trp_netpart')}.%/token_keys.*":

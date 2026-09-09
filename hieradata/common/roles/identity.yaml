@@ -12,7 +12,7 @@ include:
     - profile::openstack::cache
     - profile::webserver::apache::status
 
-openstack_version: 'zed'
+openstack_version: 'antelope'
 
 # bootstrap keystone
 keystone::bootstrap::bootstrap:             false
